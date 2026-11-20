@@ -24,7 +24,7 @@
     'Medioambiente · Calidad del aire en Pekín',
     'Laboratorio enológico · Vinos blancos portugueses',
   ];
-  const state = {actor:null,login:null,challengeId:null,token:null,groups:[],myGroup:null,record:null};
+  const state = {actor:null,login:null,challengeId:null,token:null,groups:[],groupSize:4,myGroup:null,record:null};
   const cleanNumber = value => String(value ?? '').replace(/\D/g,'').slice(0,8);
   const cleanDV = value => String(value ?? '').toUpperCase().replace(/[^0-9K]/g,'').slice(0,1);
   function expectedDV(numero) {
@@ -77,7 +77,7 @@
         DATA_DEMO.map(persona => persona.numero + '–' + persona.dv).join(', ') +
         '. Los envíos se simulan en este navegador.';
     }
-    else {n.className='info-note';n.textContent='REGISTRO INSTITUCIONAL · Los estudiantes no pueden consultar la nómina del curso. Solo el servidor valida los cuatro RUT, el número del grupo y los envíos de correo.';}
+    else {n.className='info-note';n.textContent='REGISTRO INSTITUCIONAL · Los estudiantes no pueden consultar la nómina del curso. Solo el servidor valida los RUT, el número del grupo y los envíos de correo.';}
   }
   async function requestCode(event){event.preventDefault();
     if (carga.activa) return;
@@ -111,11 +111,20 @@
       await abrirInscripcion();
     }catch(err){message(err.message);}finally{terminar();}
   }
-  function readMembers(){return [...document.querySelectorAll('.member-row')].map(row=>({
+  function applyGroupSize(size) {
+    state.groupSize = size === 3 ? 3 : 4;
+    const last = document.querySelectorAll('.member-row')[3];
+    last.classList.toggle('hidden', state.groupSize === 3);
+    $('groupRule').textContent = state.groupSize === 3
+      ? 'Ya hay 36 estudiantes inscritos. Los tres estudiantes que quedan pueden registrar juntos el último grupo.'
+      : 'Inscribe un grupo de cuatro. Si te faltan compañeros, escribe al docente por Aula USM para que te ayude a formar grupo.';
+  }
+  function memberRows(){return [...document.querySelectorAll('.member-row')].slice(0,state.groupSize);}
+  function readMembers(){return memberRows().map(row=>({
     numero:cleanNumber(row.querySelector('.member-number').value),dv:cleanDV(row.querySelector('.member-dv').value)
   }));}
   function updateRows(){let count=0;const known=new Set();
-    const rows=[...document.querySelectorAll('.member-row')];
+    const rows=memberRows();
     const vals=readMembers();
     rows.forEach((row,i)=>{
       const v=vals[i],blank=!v.numero&&!v.dv,err=checkPair(v.numero,v.dv),duplicated=!err&&known.has(joinRut(v));
@@ -126,9 +135,9 @@
       else if(duplicated){status.textContent='RUT repetido';status.className='dv-status status-error';}
       else{status.textContent=(v.numero.length>=6&&v.dv)?'DV incorrecto':'Incompleto';status.className='dv-status '+(v.numero.length>=6&&v.dv?'status-error':'status-neutral');}
     });
-    $('counterText').textContent=`${count} de 4 RUT válidos`;
+    $('counterText').textContent=`${count} de ${state.groupSize} RUT válidos`;
     const chosen=state.groups.find(g=>g.numero===Number($('groupSelect').value));
-    $('registerBtn').disabled=carga.activa || !(count===4 && vals.length===4 && chosen?.disponible && $('acceptTerms').checked && !state.myGroup);
+    $('registerBtn').disabled=carga.activa || !(count===state.groupSize && vals.length===state.groupSize && chosen?.disponible && $('acceptTerms').checked && !state.myGroup);
   }
   function renderGroups() {
     const old=$('groupSelect').value;
@@ -147,6 +156,7 @@
       'Los archivos se distribuyen solamente al completar el registro.';
   }
   async function loadState(){const data=IS_DEMO?sampleState(state.actor):await api('estado',{},state.token);
+    applyGroupSize(data.groupSize);
     state.actor=data.actor;state.groups=data.groups||[];state.myGroup=data.myGroup;
     progress(state.myGroup?4:3);
     if(state.myGroup){$('enrollment').classList.add('hidden');renderResult({grupo:state.myGroup,existing:true});return;}
@@ -195,15 +205,15 @@
     if (carga.activa) return;
     clearMessage();
     const integrantes=readMembers();
-    if(integrantes.length!==4)return message('Deben ingresarse exactamente cuatro integrantes.');
+    if(integrantes.length!==state.groupSize)return message('Revisa la cantidad de integrantes.');
     const missing=integrantes.findIndex(v=>checkPair(v.numero,v.dv));
     if(missing>=0)return message(`Verifica el RUT–DV del integrante ${missing+1}.`);
-    if(new Set(integrantes.map(joinRut)).size!==4)return message('Los cuatro RUT deben ser distintos.');
+    if(new Set(integrantes.map(joinRut)).size!==state.groupSize)return message('Los RUT deben ser distintos.');
     if(joinRut(integrantes[0])!==joinRut(state.actor))return message('El primer integrante debe ser el responsable autenticado.');
     const numeroGrupo=Number($('groupSelect').value);
     const group=state.groups.find(g=>g.numero===numeroGrupo);
     if(!group?.disponible)return message('Selecciona un grupo habilitado y disponible.');
-    if(!$('acceptTerms').checked)return message('Debes confirmar que los cuatro integrantes conocen la inscripción.');
+    if(!$('acceptTerms').checked)return message('Debes confirmar que todos los integrantes conocen la inscripción.');
     const terminar = carga.iniciar('Registrando grupo…', $('registerBtn'), controlesGrupo());
     try{
       let result;
@@ -218,14 +228,14 @@
       $('enrollment').classList.add('hidden');progress(4);renderResult(result);
       $('result').scrollIntoView({behavior:'smooth',block:'center'});
     }catch(err){message(err.message);
-      if(!IS_DEMO)try{const data=await api('estado',{},state.token);state.groups=data.groups;state.myGroup=data.myGroup;renderGroups();}catch{}
+      if(!IS_DEMO)try{await loadState();}catch{}
     }finally{terminar();updateRows();}
   }
   function renderResult(result){$('result').classList.remove('hidden');
     $('resultTitle').textContent=result.existing?'Ya formas parte de un grupo':'Inscripción del grupo confirmada';
     $('resultDetail').textContent=`Grupo ${numberTag(result.grupo)} · Estadística Descriptiva · Paralelo 300.`;
     $('resultSummary').textContent=result.existing?'Este RUT ya se encuentra registrado. No puedes abrir un grupo adicional.':
-      'La reserva del número de grupo y de sus cuatro integrantes ha quedado registrada.';
+      'La reserva del número de grupo y de sus integrantes ha quedado registrada.';
     const emails=$('resultEmails');
     $('materialsLink').hidden=IS_DEMO;
     if(IS_DEMO){emails.textContent='Simulación: cinco correos (cuatro integrantes y docente), sin envíos reales. El registro solo existe en este navegador.';
