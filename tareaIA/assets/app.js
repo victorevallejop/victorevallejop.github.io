@@ -117,7 +117,7 @@
     last.classList.toggle('hidden', state.groupSize === 3);
     $('groupRule').textContent = state.groupSize === 3
       ? 'Ya hay 36 estudiantes inscritos. Los tres estudiantes que quedan pueden registrar juntos el último grupo.'
-      : 'Inscribe un grupo de cuatro. Si te faltan compañeros, escribe al docente por Aula USM para que te ayude a formar grupo.';
+      : 'Para inscribirte, completa un grupo de cuatro. Si te faltan integrantes, busca compañeros del paralelo que aún estén formando grupo. Recurre al docente por Aula USM solo si ya agotaste esa posibilidad.';
   }
   function memberRows(){return [...document.querySelectorAll('.member-row')].slice(0,state.groupSize);}
   function readMembers(){return memberRows().map(row=>({
