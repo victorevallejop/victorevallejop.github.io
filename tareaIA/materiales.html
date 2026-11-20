@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="es-CL">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="referrer" content="no-referrer">
+  <meta name="robots" content="noindex,nofollow">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; connect-src 'self' https://bjduerrhpmwgwsxusmuy.supabase.co; form-action 'none'; base-uri 'none'">
+  <title>Materiales de mi grupo · Estadística Descriptiva · USM</title>
+  <link rel="stylesheet" href="assets/materiales.css?v=2">
+  <link rel="stylesheet" href="assets/carga.css">
+  <script defer src="assets/config.js"></script>
+  <script defer src="assets/carga.js"></script>
+  <script defer src="assets/materiales.js?v=2"></script>
+</head>
+<body>
+  <main>
+    <header>
+      <div class="universidad"><img src="assets/logo-usm.png" width="218" height="35" alt="Universidad Técnica Federico Santa María"></div>
+      <h1><img src="assets/cabecera-estadistica-descriptiva.jpg" width="1200" height="360" alt="Estadística Descriptiva · EST-001 A"></h1>
+      <div class="asignatura">
+        <p>Tarea de Investigación Guiada con IA</p>
+        <p>MAT007A25 · Paralelo 300 · Segundo semestre 2026</p>
+      </div>
+    </header>
+    <section aria-labelledby="heading">
+      <h2 id="heading">Materiales de mi grupo</h2>
+      <p id="hint">Ingresa tu RUT para recibir un código en tu correo registrado.</p>
+      <div class="carga-curso" id="carga" role="status" aria-live="polite" aria-atomic="true"></div>
+      <form id="identity">
+        <div class="fields">
+          <label>RUT sin puntos ni guion<input id="numero" inputmode="numeric" pattern="[0-9]{6,8}" maxlength="8" required></label>
+          <label>Dígito verificador<input id="dv" maxlength="1" pattern="[0-9Kk]" autocapitalize="characters" required></label>
+        </div>
+        <button type="submit" id="pedir">Solicitar código</button>
+      </form>
+      <form id="verification" hidden>
+        <label>Código de seis dígitos<input id="code" pattern="[0-9]{6}" maxlength="6" inputmode="numeric" autocomplete="one-time-code" required></label>
+        <div class="acciones">
+          <button type="submit" id="verificar">Verificar y descargar</button>
+          <button type="button" id="back" class="secondary">Volver a ingresar mi RUT</button>
+        </div>
+      </form>
+      <div id="choices" hidden>
+        <div class="files">
+          <button data-type="enunciado"><span data-etiqueta>Enunciado de la tarea</span><small>PDF</small></button>
+          <button data-type="datos"><span data-etiqueta>Base de datos</span></button>
+          <button data-type="plantilla"><span data-etiqueta>Plantilla de desarrollo</span><small>Word</small></button>
+        </div>
+        <button class="secondary" id="end">Cerrar acceso</button>
+      </div>
+      <p id="status" role="status" aria-live="polite" aria-atomic="true"></p>
+      <noscript>Activa JavaScript en tu navegador para identificarte y descargar los archivos.</noscript>
+    </section>
+    <footer>
+      <p><strong>Entrega en Aula USM</strong> · 1 de diciembre de 2026, 23:59 hrs.</p>
+      <p>Sube tu desarrollo en Word y la versión final en PDF.</p>
+      <p class="sede">T.U. en Ciencia de Datos · Sede Viña del Mar</p>
+    </footer>
+  </main>
+</body>
+</html>

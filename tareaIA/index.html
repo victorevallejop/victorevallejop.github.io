@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="es-CL">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="theme-color" content="#164b9d" />
+  <meta name="robots" content="noindex,nofollow" />
+  <meta name="description" content="Inscripción de grupos para Estadística Descriptiva, MAT007A25, paralelo 300. Validación privada por RUT y DV." />
+  <title>Inscripción de grupos | Estadística Descriptiva · UTFSM</title>
+  <link rel="stylesheet" href="assets/style.css" />
+  <link rel="stylesheet" href="assets/carga.css" />
+
+<style>
+/* Formulario para incrustar en Moodle: la plataforma ya aporta cabecera,
+   navegación, título de curso y contenedor visual. */
+html { background:transparent!important; scroll-behavior:auto; width:100%; min-width:0; }
+body { margin:0!important; background:transparent!important; width:100%; min-width:0; }
+.wrapper { max-width:none!important; width:100%!important; min-width:0!important; margin:0!important; padding:0!important; }
+.page { width:100%!important; max-width:none!important; min-width:0!important; background:transparent!important; border:0!important; border-radius:0!important;
+        box-shadow:none!important; padding:0!important; }
+.info-note { margin-top:0!important; }
+.stepper { margin:16px 0 8px; }
+.section { margin-top:18px; }
+.section:last-child { margin-bottom:6px; }
+@media(max-width:770px) {
+  .stepper { gap:6px; }
+  .panel { padding:14px; }
+}
+</style>
+</head>
+<body class="moodle-content">
+<main class="wrapper" aria-label="Formulario de inscripción de grupos">
+<div class="page">
+    <div class="info-note" id="modeNotice" role="status"></div>
+    <div class="stepper" aria-label="Etapas de la inscripción"><div class="step now" id="step1"><b>1</b><span>Identificación</span></div><div class="step" id="step2"><b>2</b><span>Verificación</span></div><div class="step" id="step3"><b>3</b><span>Cuatro RUT y grupo</span></div><div class="step" id="step4"><b>4</b><span>Confirmación</span></div></div>
+    <div class="carga-curso" id="carga" role="status" aria-live="polite" aria-atomic="true"></div>
+    <section class="section" id="authSection" aria-labelledby="titleAuth"><div class="section-band"><span class="band-icon" aria-hidden="true">◈</span><h2 id="titleAuth">Identificación del responsable</h2></div>
+      <div class="panel" id="authPanel">
+        <div class="panel-heading"><span class="counter">01</span><div><h3>Ingresa tu RUT y dígito verificador</h3><p>Debes pertenecer a la nómina de esta asignatura. No se publicará el listado de estudiantes.</p></div></div>
+        <form id="authForm" novalidate><div class="login-fields"><label class="control">RUT sin puntos ni guion<input id="loginNumero" class="field" type="text" inputmode="numeric" autocomplete="off" maxlength="8" placeholder="Ej.: 12345678" aria-describedby="rutHelp" required /></label><label class="control dv-control">Dígito verificador<input id="loginDV" class="field dv-field" type="text" inputmode="text" autocapitalize="characters" maxlength="1" placeholder="5 o K" required /></label><button id="sendCodeBtn" class="btn primary" type="submit">Solicitar código</button></div></form>
+        <p class="minor" id="rutHelp">El RUT contiene únicamente cifras; el DV es una cifra del 0 al 9 o la letra K. Ambos campos se validan mediante módulo 11.</p>
+      </div>
+      <div class="panel hidden" id="otpPanel"><div class="panel-heading"><span class="counter">02</span><div><h3>Verificación mediante correo electrónico</h3><p>Si el RUT figura en el curso, se enviará un código al correo registrado. No se revela la dirección.</p></div></div><form id="otpForm"><div class="otp-line"><label class="control">Código de seis dígitos<input class="field otp" id="otpCode" type="text" inputmode="numeric" maxlength="6" autocomplete="one-time-code" placeholder="000000" required /></label><button class="btn primary" type="submit" id="verifyBtn">Verificar e ingresar</button></div></form><button class="text-button" type="button" id="backLogin">Cambiar RUT</button></div>
+    </section>
+    <div id="flash" class="message" role="alert" aria-live="polite"></div>
+    <section class="section hidden" id="enrollment" aria-labelledby="titleEnroll"><div class="section-band"><span class="band-icon" aria-hidden="true">▤</span><h2 id="titleEnroll">Integrantes y número de grupo</h2></div>
+      <div class="actor"><span class="actor-circle" aria-hidden="true">✓</span><div><b id="actorName">Responsable verificado</b><span>Correo validado · primer integrante asignado automáticamente</span></div></div>
+      <div class="panel">
+        <div class="panel-heading"><span class="counter">03</span><div><h3>Identifica a los cuatro estudiantes mediante RUT–DV</h3><p>Todos los integrantes deben estar matriculados y no pertenecer ya a otro grupo. No se muestran nombres ni estados individuales.</p></div></div>
+        <div class="member-table" role="group" aria-label="RUT de los cuatro integrantes">
+          <div class="member-head"><span>Integrante</span><span>RUT (solo números)</span><span>DV</span><span>Validación</span></div>
+          <div class="member-row lead" data-index="0"><span class="member-label"><b>01</b> Responsable</span><label><span class="sr-only">RUT integrante 1</span><input class="field member-number" type="text" inputmode="numeric" maxlength="8" readonly aria-readonly="true" /></label><label><span class="sr-only">DV integrante 1</span><input class="field member-dv" type="text" maxlength="1" readonly aria-readonly="true" /></label><span class="dv-status status-success">Verificado</span></div>
+          <div class="member-row" data-index="1"><span class="member-label"><b>02</b> Integrante</span><label><span class="sr-only">RUT integrante 2</span><input class="field member-number" type="text" inputmode="numeric" maxlength="8" autocomplete="off" placeholder="Sin puntos" /></label><label><span class="sr-only">DV integrante 2</span><input class="field member-dv" type="text" inputmode="text" autocapitalize="characters" maxlength="1" placeholder="DV" /></label><span class="dv-status status-neutral">Pendiente</span></div>
+          <div class="member-row" data-index="2"><span class="member-label"><b>03</b> Integrante</span><label><span class="sr-only">RUT integrante 3</span><input class="field member-number" type="text" inputmode="numeric" maxlength="8" autocomplete="off" placeholder="Sin puntos" /></label><label><span class="sr-only">DV integrante 3</span><input class="field member-dv" type="text" inputmode="text" autocapitalize="characters" maxlength="1" placeholder="DV" /></label><span class="dv-status status-neutral">Pendiente</span></div>
+          <div class="member-row" data-index="3"><span class="member-label"><b>04</b> Integrante</span><label><span class="sr-only">RUT integrante 4</span><input class="field member-number" type="text" inputmode="numeric" maxlength="8" autocomplete="off" placeholder="Sin puntos" /></label><label><span class="sr-only">DV integrante 4</span><input class="field member-dv" type="text" inputmode="text" autocapitalize="characters" maxlength="1" placeholder="DV" /></label><span class="dv-status status-neutral">Pendiente</span></div>
+        </div><div class="lower-line"><span id="counterText">1 de 4 RUT válidos</span><span class="privacy-inline">La matrícula y las inscripciones se comprobarán en el servidor al confirmar</span></div>
+      </div>
+      <div class="panel"><div class="panel-heading"><span class="counter">04</span><div><h3>Selecciona el número del grupo</h3><p>Un grupo reservado se deshabilita automáticamente. Los números no muestran información de sus integrantes.</p></div></div><div class="group-grid"><label class="control">Número de grupo<select id="groupSelect" class="field"><option value="">Seleccionar grupo...</option></select></label><div class="group-description"><span class="detail-label">CASO ASOCIADO</span><strong id="assignmentName">Selecciona un grupo</strong><p id="assignmentHint">Al completar la inscripción recibirás los vínculos a los tres materiales de tu grupo.</p></div></div><label class="consent"><input type="checkbox" id="acceptTerms"/><span>Declaro que los cuatro integrantes conocen y aceptan formar parte de este grupo y que he revisado cuidadosamente los RUT ingresados.</span></label><div class="form-actions"><button id="registerBtn" class="btn primary" disabled type="button">Confirmar inscripción del grupo</button><button type="button" class="btn secondary" id="refreshGroups">Actualizar disponibilidad</button></div></div>
+    </section>
+    <section class="result hidden" id="result" aria-live="polite"><div class="success-mark">✓</div><h2 id="resultTitle">Inscripción registrada</h2><p id="resultDetail"></p><div class="result-summary" id="resultSummary"></div><p class="minor" id="resultEmails"></p><div class="form-actions"><a hidden id="materialsLink" href="materiales.html" target="_blank" rel="noopener noreferrer">Acceder a los materiales de mi grupo</a><button id="previewMailBtn" type="button" class="btn secondary hidden">Ver simulación de correos</button><button id="demoReset" type="button" class="btn ghost hidden">Reiniciar solo la demostración</button></div></section>
+    <section class="section"><div class="section-band"><span class="band-icon" aria-hidden="true">▧</span><h2>Condiciones de inscripción y privacidad</h2></div><div class="rules"><div><strong>Identidad y matrícula</strong><p>El correo del responsable debe verificarse. Los cuatro RUT deben tener dígitos verificadores correctos y pertenecer a la nómina del curso.</p></div><div><strong>Un estudiante, un grupo</strong><p>El registro centralizado impide inscripciones duplicadas, incluso ante solicitudes simultáneas. Nadie puede consultar la nómina completa desde este formulario.</p></div><div><strong>Material de evaluación</strong><p>Cada integrante recibirá tres vínculos en su correo. Un código personal permite descargar el enunciado, la base de datos y la plantilla durante 10 minutos. El profesor recibirá esos materiales y la identificación del grupo.</p></div></div></section>
+</div>
+</main>
+<div id="modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="modalTitle"><div class="modal-card"><div class="modal-title"><h2 id="modalTitle">Notificaciones simuladas</h2><button type="button" id="closeModal" class="close" aria-label="Cerrar">×</button></div><pre id="modalText"></pre></div></div>
+<script src="assets/config.js"></script>
+<script src="assets/carga.js"></script>
+<script src="assets/app.js?v=3"></script>
+<script>
+/* EST001A v1: comunicación de altura con el contenedor Moodle.
+   Solo se transmite una dimensión (px); nunca datos personales del formulario. */
+(function () {
+  'use strict';
+  if (window.parent === window) return; // vista independiente en GitHub Pages
+
+  var CHANNEL = 'EST001A_MOODLE_IFRAME_V1';
+  var content = document.querySelector('main.wrapper');
+  if (!content) return;
+
+  var scheduled = false;
+  var lastHeight = 0;
+  var requested = false;
+  var targetOrigin = '*';
+  try {
+    if (document.referrer) targetOrigin = new URL(document.referrer).origin;
+  } catch (_) {}
+
+  function measureHeight() {
+    // Medir el contenido y NO la altura del viewport del iframe:
+    // evita bucles de crecimiento al modificar la altura desde Moodle.
+    var bottom = content.getBoundingClientRect().bottom + window.scrollY;
+    return Math.max(180, Math.min(32000, Math.ceil(bottom + 16)));
+  }
+
+  function report(force) {
+    scheduled = false;
+    var h = measureHeight();
+    if (!force && Math.abs(h - lastHeight) < 2) return;
+    lastHeight = h;
+    window.parent.postMessage({channel: CHANNEL, type: 'height', height: h}, targetOrigin);
+  }
+
+  function queue(force) {
+    requested = requested || !!force;
+    if (scheduled) return;
+    scheduled = true;
+    requestAnimationFrame(function () {
+      var fresh = requested;
+      requested = false;
+      report(fresh);
+    });
+  }
+
+  // Solicitudes del padre en el momento de cargar o cambiar el ancho.
+  window.addEventListener('message', function (event) {
+    if (event.source !== window.parent) return;
+    if (!event.data || event.data.channel !== CHANNEL || event.data.type !== 'request-height') return;
+    if (targetOrigin !== '*' && event.origin !== targetOrigin) return;
+    queue(true);
+  });
+
+  window.addEventListener('load', function () { queue(true); });
+  window.addEventListener('resize', function () { queue(true); });
+  window.addEventListener('orientationchange', function () { queue(true); });
+  document.addEventListener('DOMContentLoaded', function () { queue(true); });
+
+  if (window.ResizeObserver) {
+    var resizeObserver = new ResizeObserver(function () { queue(false); });
+    resizeObserver.observe(content);
+    var page = content.querySelector('.page');
+    if (page) resizeObserver.observe(page);
+  }
+  if (window.MutationObserver) {
+    var mutations = new MutationObserver(function () { queue(false); });
+    mutations.observe(content, {subtree:true, childList:true,
+      attributes:true, attributeFilter:['class', 'style', 'hidden', 'aria-expanded']});
+  }
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(function () { queue(true); });
+  }
+  queue(true);
+})();
+</script>
+</body>
+</html>

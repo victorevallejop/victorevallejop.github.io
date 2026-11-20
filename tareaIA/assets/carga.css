@@ -1,0 +1,36 @@
+.carga-curso:empty { margin: 0; padding: 0; }
+.carga-curso:not(:empty):not(.carga-en-boton) {
+  display: flex;
+  align-items: center;
+  gap: .65rem;
+  margin: .85rem 0;
+  color: #164f64;
+  font-weight: 600;
+}
+.carga-en-boton {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+button[aria-busy="true"]:disabled { cursor: wait; opacity: 1; }
+button[aria-busy="true"]::before,
+.carga-curso:not(:empty):not(.carga-en-boton)::before {
+  content: "";
+  display: inline-block;
+  box-sizing: border-box;
+  width: 1em;
+  height: 1em;
+  flex: none;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  animation: curso-giro .8s linear infinite;
+}
+button[aria-busy="true"]::before { margin-inline-end: .55em; vertical-align: -.13em; }
+@keyframes curso-giro { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) {
+  button[aria-busy="true"]::before, .carga-curso::before { animation: none !important; }
+}
